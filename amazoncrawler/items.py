@@ -13,3 +13,7 @@ class AmazoncrawlerItem(scrapy.Item):
     reviews_count = scrapy.Field()
     price = scrapy.Field()
     link = scrapy.Field()
+
+class PricyItem(scrapy.Item):
+    title = scrapy.Field()
+    price = scrapy.Field()
