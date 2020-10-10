@@ -108,6 +108,7 @@ dist
 bin
 lib
 share
+include
 data
 __pycache__
 http_proxies.txt
