@@ -47,5 +47,5 @@ def update_prices():
         print('\n\n\n')
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     update_prices()
