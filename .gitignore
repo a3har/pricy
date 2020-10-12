@@ -112,3 +112,9 @@ include
 data
 __pycache__
 http_proxies.txt
+database_auth
+scheduler.py
+client_secret_1041291564289-k0r0de67l1dd1aq3h7fbhopf9re8u0i7.apps.googleusercontent.com.json
+token_gmail_v1.pickle
+database_auth.json
+api_cred.json

@@ -1,34 +1,51 @@
 import requests
 import json
 import time
-import grequests
-
-urls_file = open('links.json')
-links = json.load(urls_file)
+import pymongo
+import json
 
 
-for link in links:
-    # tries = 0
-    items = []
-    url = 'http://:9080/crawl.json?spider_name=pricy&url=' + \
-        link['link']
-    start_time = time.time()
-    # while(not items):
-    # if (tries):
-    #     print("Trying again : "+str(tries))
-    response = requests.get(url)
-    items = response.json()['items']
-    # tries += 1
+def get_product_details_collection():
     try:
-        print(response.json()['errors'][0])
+        database_auth_file = open('database_auth.json', 'rb')
+        key = json.load(database_auth_file)
     except:
-        print(response.json())
-    print("Time taken" + str(time.time()-start_time))
+        print("ERROR : database_auth.json file not found")
+        exit(0)
+    client = pymongo.MongoClient(
+        "mongodb+srv://"+key['username']+":"+key['password']+"@cluster0.unos1.mongodb.net/pricy?retryWrites=true&w=majority")
+    db = client.pricy
+    collection = db['product_details']
+    database_auth_file.close()
+    return collection
 
-    print('\n\n\n')
 
-# rs = (grequests.get(
-#     'http://139.59.91.245:9080/crawl.json?spider_name=pricy&url='+u["link"]) for u in links)
-# for r in grequests.map(rs):
-#     print(r.json())
-#     print('\n\n\n')
+def update_prices():
+    collection = get_product_details_collection()
+    try:
+        api_cred_file = open("api_cred.json", "rb")
+        api_cred = json.load(api_cred_file)
+    except:
+        print("ERROR : api_cred.json file not found")
+        exit(0)
+    for product in collection.find():
+        tries = 0
+        items = []
+        url = api_cred['url'] + product['link']
+        start_time = time.time()
+        while(not items):
+            if (tries):
+                print("Trying again : "+str(tries))
+                tries += 1
+            try:
+                response = requests.get(url)
+                items = response.json()['items']
+            except:
+                pass
+        print(items)
+        print("Time taken" + str(time.time()-start_time))
+        print('\n\n\n')
+
+
+if __name__ == 'main':
+    update_prices()
